@@ -1,0 +1,27 @@
+ClassName	Modifiers	Parent	Interfaces	File
+Abstract1i3	public abstract 		Interface8, Interface9, Interface10G<L>	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Abstract2G1ei<M>	public abstract 	Base5G<M>	Interface11G<M>	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Abstract3G2e<N,O>	public abstract 	Base6G<N>		E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Base1				_no_file_
+Base2				_no_file_
+Base2G<Map.Entry<A,B>>				_no_file_
+Base2G<Map.Entry<E,F>>				_no_file_
+Base3				_no_file_
+Base4				_no_file_
+Base5G<J>				_no_file_
+Base5G<M>				_no_file_
+Base6G<N>				_no_file_
+Package1e		Base2G<Map.Entry<A,B>>		E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Package2SG<C,D>	static 			E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Package3Fe	final 	Base2G<Map.Entry<E,F>>		E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Package4GSFi<K,V>	static final 		Map.Entry<G,H>	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Package5G1<I extends Base1G<I>>				E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Package6G2<List<? extends Base1>>				E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public1SFe	public static	final 	Base5G<J>		E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public2SFi	static final public 		Interface01	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public3SFei	static public final 	Base1	Interface02	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public4SFei2	static public final 	Base2	Interface03, Interface04	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public5SFei	static public final 	Base3	Interface05	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public6SFei2	static public final 	Base4	Interface06, Interface07	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public7Fi2	public final 		Interface08, Interface09	E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
+Public8G1<K extends Base2>	public 			E:\opt\soft14\c-c++\dlang14c++\All\javatree-v1.4_2\test\test.java
