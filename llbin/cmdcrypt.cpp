@@ -4,7 +4,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of llbin project.
@@ -29,7 +29,7 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
+
 
 #include <stdio.h>
 
@@ -37,7 +37,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
- 
+
 #include <ctype.h>
 #include <vector>
 #include <map>
@@ -45,7 +45,7 @@
 #include <regex>
 #include <exception>
 #include <errno.h>
- 
+
 #include "ll_stdhdr.hpp"
 #include "cmdcrypt.hpp"
 #include "directory.hpp"
@@ -92,11 +92,11 @@ static size_t isWriteableFile(const struct stat& info) {
 
 //-------------------------------------------------------------------------------------------------
 bool CmdCryptBase::begin(StringList& fileDirList) {
-    
+
     for (auto ext : FULL_EXT) {
         EXT_FULL_SET.insert(ext);
     }
-    
+
     // static std::map<const char*, const char*> EXT_ABBR;
     // static std::map<const char*, const char*> ABBR_EXT;
 
@@ -107,7 +107,7 @@ bool CmdCryptBase::begin(StringList& fileDirList) {
         abbr.append("01");
         abbr.erase(3);
         abbr[2]++;
-        
+
         if (ABBR_EXT[abbr].length() != 0) {
             abbr = ext;
             abbr.insert(0, abbr.substr(abbr.length() - 1));
@@ -118,13 +118,13 @@ bool CmdCryptBase::begin(StringList& fileDirList) {
                 std::cerr << "Warning dup abbr " << abbr << " " << ext << " and " << ABBR_EXT[abbr] << std::endl;
             }
         }
-        
+
         if (verbose) {
             std::cerr << "Ext=" << ext << " =>" << abbr << std::endl;
         }
         EXT_ABBR[ext] = abbr;
         ABBR_EXT[abbr] = ext;
-        
+
         if (EXT_FULL_SET.find(ext) != EXT_FULL_SET.end()) {
             DEC_FULL_SET.insert(abbr);
         }
@@ -134,33 +134,31 @@ bool CmdCryptBase::begin(StringList& fileDirList) {
 }
 
 //-------------------------------------------------------------------------------------------------
-size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype)
-{
+size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype) {
     size_t fileCount = 0;
     lstring name;
     CmdUtils::getName(name, fullname);
 
 
     if (dtype == IS_FILE
-        && !name.empty()
-        && !CmdUtils::FileMatches(name, excludeFilePatList, false)
-        && CmdUtils::FileMatches(name, includeFilePatList, true))
-    {
+            && ! name.empty()
+            && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
+            && CmdUtils::FileMatches(name, includeFilePatList, true)) {
         fileCount++;
         if (showFile)
             std::cout << fullname.c_str() << std::endl;
 
         struct stat info;
         if ((fullname.find(extension) == std::string::npos) == isEncrypt
-            && stat(fullname, &info) == 0) {
-          
+        && stat(fullname, &info) == 0) {
+
             if (isWriteableFile(info)) {
-            bool doAll = allOfFile(name);
-            // std::cerr << " code=" << code << " " << name << " all=" << doAll << std::endl;
+                bool doAll = allOfFile(name);
+                // std::cerr << " code=" << code << " " << name << " all=" << doAll << std::endl;
 #ifdef USE_THREAD
-            ThreadJob::StartThread(*this, fullname, doAll);
+                ThreadJob::StartThread(*this, fullname, doAll);
 #else
-            doJob(fullname, doAll);
+                doJob(fullname, doAll);
 #endif
                 countDone++;
             } else {
@@ -230,7 +228,7 @@ void CmdDecrypt::doJob(const lstring& fullname, bool allOfFile)  {
     if (makeDecryptName(newname, fullname)) {
         size_t fileLen = CmdUtils::fileLength(fullname);
         std::basic_fstream<Byte> fileStream(fullname, ios::out | ios::in | ios::binary);
-       
+
         size_t offset = 0;
         size_t gotLen = 0;
         do {
@@ -240,20 +238,20 @@ void CmdDecrypt::doJob(const lstring& fullname, bool allOfFile)  {
                 maskBlock(block, gotLen);
                 fileStream.clear();
                 fileStream.seekp(offset);
-                if (!dryRun) {
+                if (! dryRun) {
                     fileStream.write(block, gotLen);
                 }
                 offset += gotLen;
                 // std::cerr<< " dec " << fullname << " at=" << offset << " len=" << gotLen << std::endl;
             }
         } while (gotLen > 0 && allOfFile && offset < fileLen);
-        bool doRename = !fileStream.bad() && !dryRun;
+        bool doRename = ! fileStream.bad() && ! dryRun;
         fileStream.close();
         if (doRename) {
             rename(fullname, newname);
-        } else if (!dryRun) {
+        } else if (! dryRun) {
             countError++;
-            std::cerr<< my_name << " failed on " << fullname << std::endl;
+            std::cerr << my_name << " failed on " << fullname << std::endl;
         }
     }
 }
@@ -272,7 +270,7 @@ bool CmdDecrypt::allOfFile(const lstring& name) {
     // std::cerr << "extn=" << extn << "\n";
     // for (lstring const& ext : DEC_FULL_SET) std::cerr << ext << ' ';
     // std::cerr << std::endl;
-       
+
     return DEC_FULL_SET.find(extn) != DEC_FULL_SET.end();
 }
 
@@ -281,12 +279,12 @@ bool CmdDecrypt::allOfFile(const lstring& name) {
 void CmdEncrypt::doJob(const lstring& fullname, bool allOfFile)  {
     Byte block[BLOCK_SIZE];
     lstring newname;
-    
+
     if (makeEncryptName(extension, newname, fullname)) {
-        if (!dryRun) {
+        if (! dryRun) {
             size_t fileLen = CmdUtils::fileLength(fullname);
             std::basic_fstream<Byte> fileStream(fullname, ios::out | ios::in | ios::binary);
-            
+
             size_t offset = 0;
             size_t gotLen = 0;
             do {
@@ -306,13 +304,13 @@ void CmdEncrypt::doJob(const lstring& fullname, bool allOfFile)  {
                 // std::cerr<< " enc " << fullname << " at=" << offset << " len=" << gotLen << std::endl;
                 offset += gotLen;
             } while (gotLen > 0 && allOfFile && offset < fileLen);
-            bool doRename = !fileStream.bad();
+            bool doRename = ! fileStream.bad();
             fileStream.close();
             if (doRename) {
                 rename(fullname, newname);
             } else {
                 countError++;
-                std::cerr<< my_name << " failed on " << fullname << std::endl;
+                std::cerr << my_name << " failed on " << fullname << std::endl;
             }
         }
     } else {
@@ -330,14 +328,14 @@ bool CmdEncrypt::end() {
 #ifdef USE_THREAD
     ThreadJob::EndThreads();
 #endif
-    if (!ignoredExtn.empty()) {
+    if (! ignoredExtn.empty()) {
         std::cout << "File extensions not encrypted (not supported):\n";
         std::cout << "Count Extension\n";
         for (auto iter = ignoredExtn.begin(); iter != ignoredExtn.end(); iter++) {
             std::cout << setw(5) << iter->second << " " << iter->first << std::endl;
         }
     }
-	return true;
+    return true;
 }
 
 

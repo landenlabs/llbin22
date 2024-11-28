@@ -4,7 +4,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of llbin project.
@@ -43,18 +43,18 @@ public:
     ushort vLen;
     ushort key;
     ushort start;
-    
+
 protected:
     static const int CHR_MAP_SIZE = 256;
     char  encMap[CHR_MAP_SIZE];
     char  decMap[CHR_MAP_SIZE];
-    
+
     bool buildMap();
     void decChar(const lstring& inStr, lstring& outStr);
-    
+
 public:
     CmdHideBase(const char* name, DIR_TYPES _dtype) : Command(name), dtype(_dtype), key(11), start(0) {}
-   
+
     virtual  bool begin(StringList& fileDirList) = 0;
     virtual size_t add( lstring& file, DIR_TYPES dtype) = 0;
     virtual bool end() { return true; }
@@ -68,7 +68,7 @@ public:
     CmdHide(DIR_TYPES dtype = IS_DIR_END) : CmdHideBase("hide", dtype) {}
     virtual  bool begin(StringList& fileDirList);
     virtual size_t add( lstring& file, DIR_TYPES dtype);
- 
+
     bool makeHideName(const struct stat& info, const lstring& oldPath, lstring& newPath);
     void encChar(const lstring& inStr, lstring& outStr);
 };
@@ -81,8 +81,8 @@ public:
     CmdUnhide(DIR_TYPES dtype = IS_DIR_END) : CmdHideBase("unhide", dtype) {}
     virtual  bool begin(StringList& fileDirList);
     virtual size_t add( lstring& file, DIR_TYPES dtype);
-   
-    
+
+
     bool makeUnHideName(const struct stat& info, const lstring& oldPath, lstring& newPath);
- 
+
 };

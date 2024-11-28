@@ -1,10 +1,10 @@
 //-------------------------------------------------------------------------------------------------
 //
-//  ll_stdhdr.h   Landen Labs Standard constants/typedefs/defines   Dennis Lang    
+//  ll_stdhdr.h   Landen Labs Standard constants/typedefs/defines   Dennis Lang
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of lldup project.
@@ -39,13 +39,13 @@ using namespace std;
 typedef unsigned short  UShort;
 
 #if defined(_WIN32) || defined(_WIN64)
-#define HAVE_WIN
-#define NOMINMAX
-#define _CRT_SECURE_NO_WARNINGS
+    #define HAVE_WIN
+    #define NOMINMAX
+    #define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #ifdef HAVE_WIN
-  // 
+    //
 #else
-typedef unsigned int  DWORD;
+    typedef unsigned int  DWORD;
 #endif

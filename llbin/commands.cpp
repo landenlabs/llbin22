@@ -4,7 +4,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of llbin project.
@@ -29,7 +29,7 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
+
 #include <iostream>
 
 #include "commands.hpp"
@@ -57,19 +57,17 @@ static size_t isWriteableFile(const struct stat& info) {
 
 // ===========================================================================
 // Locate matching files which are not in exclude list.
- size_t BinNone::add( lstring& fullname, DIR_TYPES dtype)
-{
+size_t BinNone::add( lstring& fullname, DIR_TYPES dtype) {
     size_t fileCount = 0;
     lstring name;
-     CmdUtils::getName(name, fullname);
+    CmdUtils::getName(name, fullname);
 
     if (dtype == IS_FILE
-        && !name.empty()
-        && !CmdUtils::FileMatches(name, excludeFilePatList, false)
-        && CmdUtils::FileMatches(name, includeFilePatList, true))
-    {
+            && ! name.empty()
+            && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
+            && CmdUtils::FileMatches(name, includeFilePatList, true)) {
         fileCount++;
-        
+
         struct stat info;
         if ( stat(fullname, &info) == 0 && isWriteableFile(info)) {
             if (showFile)

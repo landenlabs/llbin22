@@ -44,14 +44,14 @@ void ThreadJob::doJobThreadFnc() {
 //-------------------------------------------------------------------------------------------------
 bool ThreadJob::StartThread(Command& cmd, const lstring& name, bool allOfFile) {
     ThreadJob* jobPtr;
-    
+
     if (jobQueue.Full()) {
         jobQueue.Get(jobPtr);
         // std::cerr << "Save Queue Full - join thread " << saveAuxPtr->name << std::endl;
         jobPtr->thread1.join();
         delete jobPtr;
     }
-    
+
     jobPtr = new ThreadJob(cmd, name, allOfFile, false);
     return jobQueue.Put(jobPtr);
 }
@@ -59,7 +59,7 @@ bool ThreadJob::StartThread(Command& cmd, const lstring& name, bool allOfFile) {
 //-------------------------------------------------------------------------------------------------
 void ThreadJob::EndThreads() {
     ThreadJob* jobPtr;
-    while (!jobQueue.Empty()) {
+    while (! jobQueue.Empty()) {
         jobQueue.Get(jobPtr);
         jobPtr->thread1.join();
         delete jobPtr;

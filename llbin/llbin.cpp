@@ -11,7 +11,7 @@
 //      for zip do front and back.
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com/
 //
 // This file is part of llbin project.
@@ -20,10 +20,10 @@
 //   Add -force to overwrite readonly
 //   Add -any to encode any file extension
 //   Add class for each extension, to determine length of encoding
-//   Add rename only 
+//   Add rename only
 //   Add option to change mask/encoding
 //   Add password to decode
-// 
+//
 // ----- License ----
 //
 // Copyright (c) 2021 Dennis Lang
@@ -63,7 +63,7 @@
 
 #ifdef HAVE_WIN
 #else
-#include <signal.h>
+    #include <signal.h>
 #endif
 
 // Project files
@@ -84,19 +84,18 @@ uint patternErrCnt = 0;
 
 //-------------------------------------------------------------------------------------------------
 // Recurse over directories, locate files.
-static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth)
-{
+static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth) {
     static std::vector<size_t> counts(10, 0);
-    
+
     if (Command::abortFlag) {
         return 0;
     }
-    
+
     Directory_files directory(dirname);
     lstring fullname;
-    
+
     size_t fileCount = 0;
-    
+
     struct stat filestat;
     try {
         if (stat(dirname, &filestat) == 0 && S_ISREG(filestat.st_mode)) {
@@ -106,20 +105,20 @@ static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth)
     } catch (exception ex) {
         // Probably a pattern, let directory scan do its magic.
     }
-    
-    while (!Command::abortFlag && directory.more())  {
+
+    while (! Command::abortFlag && directory.more())  {
         directory.fullName(fullname);
-        
+
         if (directory.is_directory()) {
-            counts[depth+1] = 0;
+            counts[depth + 1] = 0;
             fileCount += command.add(fullname, IS_DIR_BEG); // add directory, fullname may change
             fileCount += InspectFiles(command, fullname, depth + 1);
             fileCount += command.add(fullname, IS_DIR_END); // add directory.
         } else if (fullname.length() > 0) {
             fileCount += command.add(fullname, IS_FILE);
         }
-        
-        if (fileCount >= counts[depth]+10) {
+
+        if (fileCount >= counts[depth] + 10) {
             counts[depth] = fileCount;
             std::cerr << "\r ";
             for (unsigned idx = 0; idx <= depth; idx++)
@@ -133,8 +132,7 @@ static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth)
 
 //-------------------------------------------------------------------------------------------------
 // Return compiled regular expression from text.
-std::regex getRegEx(const char* value)
-{
+std::regex getRegEx(const char* value) {
     try {
         std::string valueStr(value);
         return std::regex(valueStr);
@@ -142,22 +140,21 @@ std::regex getRegEx(const char* value)
     } catch (const std::regex_error& regEx)  {
         std::cerr << regEx.what() << ", Pattern=" << value << std::endl;
     }
-    
+
     patternErrCnt++;
     return std::regex("");
 }
 
 //-------------------------------------------------------------------------------------------------
 // Validate option matchs and optionally report problem to user.
-bool ValidOption(const char* validCmd, const char* possibleCmd, bool reportErr = true)
-{
+bool ValidOption(const char* validCmd, const char* possibleCmd, bool reportErr = true) {
     // Starts with validCmd else mark error
     size_t validLen = strlen(validCmd);
     size_t possibleLen = strlen(possibleCmd);
-    
+
     if ( strncasecmp(validCmd, possibleCmd, std::min(validLen, possibleLen)) == 0)
         return true;
-    
+
     if (reportErr) {
         std::cerr << "Unknown option:'" << possibleCmd << "', expect:'" << validCmd << "'\n";
         optionErrCnt++;
@@ -167,56 +164,53 @@ bool ValidOption(const char* validCmd, const char* possibleCmd, bool reportErr =
 
 //-------------------------------------------------------------------------------------------------
 // Convert special characters from text to binary.
-static std::string& ConvertSpecialChar(std::string& inOut)
-{
+static std::string& ConvertSpecialChar(std::string& inOut) {
     uint len = 0;
     int x, n;
-    const char *inPtr = inOut.c_str();
+    const char* inPtr = inOut.c_str();
     char* outPtr = (char*)inPtr;
     while (*inPtr) {
         if (*inPtr == '\\') {
             inPtr++;
             switch (*inPtr) {
-                case 'n': *outPtr++ = '\n'; break;
-                case 't': *outPtr++ = '\t'; break;
-                case 'v': *outPtr++ = '\v'; break;
-                case 'b': *outPtr++ = '\b'; break;
-                case 'r': *outPtr++ = '\r'; break;
-                case 'f': *outPtr++ = '\f'; break;
-                case 'a': *outPtr++ = '\a'; break;
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                    sscanf(inPtr,"%3o%n",&x,&n);
-                    inPtr += n-1;
+            case 'n': *outPtr++ = '\n'; break;
+            case 't': *outPtr++ = '\t'; break;
+            case 'v': *outPtr++ = '\v'; break;
+            case 'b': *outPtr++ = '\b'; break;
+            case 'r': *outPtr++ = '\r'; break;
+            case 'f': *outPtr++ = '\f'; break;
+            case 'a': *outPtr++ = '\a'; break;
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+                sscanf(inPtr, "%3o%n", &x, &n);
+                inPtr += n - 1;
+                *outPtr++ = (char)x;
+                break;
+            case 'x':                                // hexadecimal
+                sscanf(inPtr + 1, "%2x%n", &x, &n);
+                if (n > 0) {
+                    inPtr += n;
                     *outPtr++ = (char)x;
                     break;
-                case 'x':                                // hexadecimal
-                    sscanf(inPtr+1,"%2x%n",&x,&n);
-                    if (n>0)
-                    {
-                        inPtr += n;
-                        *outPtr++ = (char)x;
-                        break;
-                    }
-                    // seep through
-                default:
-                    throw( "Warning: unrecognized escape sequence" );
-                case '\\':
-                case '\?':
-                case '\'':
-                case '\"':
-                    *outPtr++ = *inPtr;
-                    break;
+                }
+            // seep through
+            default:
+                throw( "Warning: unrecognized escape sequence" );
+            case '\\':
+            case '\?':
+            case '\'':
+            case '\"':
+                *outPtr++ = *inPtr;
+                break;
             }
             inPtr++;
-        }
-        else
+        } else
             *outPtr++ = *inPtr++;
         len++;
     }
@@ -226,45 +220,43 @@ static std::string& ConvertSpecialChar(std::string& inOut)
 }
 
 //-------------------------------------------------------------------------------------------------
-void showHelp(char* name)
-{
+void showHelp(char* name) {
     const char* helpMsg =  "  Dennis Lang v2.3 (landenlabs.com) " __DATE__   "\n"
-        "\nDes: 'Manipulate Binary Files\n"
-        "Use: llbin [options] directories...   or  files\n"
-        "\n"
-        " Options (only first unique characters required, options can be repeated): \n"
-        "\n"
-        "   -_y_encrypt       ; Encrypt and rename file foo.ext to foo-e.b22 \n"
-        "   -_y_decrypt       ; Decrypt and rename file foo-e.b22 foo.ext \n"
-        "\n"
-        "   -_y_hideDir       ; Hide (obfuscate) directory names \n"
-        "   -_y_unhideDir     ; Reverse obfuscated directory names \n"
-        "   -_y_hideFile      ; Hide (obfuscate) file names \n"
-        "   -_y_unhideFile    ; Reverse obfuscated file names \n"
-        "\n"
-        "   -_y_includefile=<filePattern>\n"
-        "   -_y_excludefile=<filePattern>\n"
-        "   -_y_verbose \n"
-        "   -_y_norun \n"
-        "\n"
-        " Optional:\n"
-   // Not implemented yet.
-   //     "   -_y_key=<crypt_key>       ; Use with -_y_encrypt, -_y_decrypt \n"
-        "   -_y_ext=<extension>       ; Use with -_y_encrypt to set file extension \n"
-        "\n"
-        " Example: \n"
-        "   llbin -_y_inc=a*.png -_y_inc=*.jpg -_y_ex=foo.jpg -_y_key=123456 -_y_encrypt dir1/subdir dir2 \n"
-        "   llbin -_y_inc=a*.aax -_y_inc=b*.aax -_y_ex=foo.* -_y_encrypt dir1/subdir dir2/subdir dir3/subdir \n"
-        "   llbin -_y_inc=*b22 -_y_decryp dir1/subdir dir2/subdir dir3/subdir \n"
-        "\n"
-        "\n";
+                           "\nDes: 'Manipulate Binary Files\n"
+                           "Use: llbin [options] directories...   or  files\n"
+                           "\n"
+                           " Options (only first unique characters required, options can be repeated): \n"
+                           "\n"
+                           "   -_y_encrypt       ; Encrypt and rename file foo.ext to foo-e.b22 \n"
+                           "   -_y_decrypt       ; Decrypt and rename file foo-e.b22 foo.ext \n"
+                           "\n"
+                           "   -_y_hideDir       ; Hide (obfuscate) directory names \n"
+                           "   -_y_unhideDir     ; Reverse obfuscated directory names \n"
+                           "   -_y_hideFile      ; Hide (obfuscate) file names \n"
+                           "   -_y_unhideFile    ; Reverse obfuscated file names \n"
+                           "\n"
+                           "   -_y_includefile=<filePattern>\n"
+                           "   -_y_excludefile=<filePattern>\n"
+                           "   -_y_verbose \n"
+                           "   -_y_norun \n"
+                           "\n"
+                           " Optional:\n"
+        // Not implemented yet.
+        //     "   -_y_key=<crypt_key>       ; Use with -_y_encrypt, -_y_decrypt \n"
+    "   -_y_ext=<extension>       ; Use with -_y_encrypt to set file extension \n"
+    "\n"
+    " Example: \n"
+    "   llbin -_y_inc=a*.png -_y_inc=*.jpg -_y_ex=foo.jpg -_y_key=123456 -_y_encrypt dir1/subdir dir2 \n"
+    "   llbin -_y_inc=a*.aax -_y_inc=b*.aax -_y_ex=foo.* -_y_encrypt dir1/subdir dir2/subdir dir3/subdir \n"
+    "   llbin -_y_inc=*b22 -_y_decryp dir1/subdir dir2/subdir dir3/subdir \n"
+    "\n"
+    "\n";
     std::cerr << Colors::colorize("\n_W_") << name << Colors::colorize(helpMsg);
 }
- 
+
 #ifdef HAVE_WIN
 //-------------------------------------------------------------------------------------------------
-BOOL WINAPI CtrlHandler(DWORD fdwCtrlType)
-{
+BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
     switch (fdwCtrlType)  {
     case CTRL_C_EVENT:  // Handle the CTRL-C signal.
         Command::abortFlag = true;
@@ -272,13 +264,13 @@ BOOL WINAPI CtrlHandler(DWORD fdwCtrlType)
         Beep(750, 300);
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
 #else
 //-------------------------------------------------------------------------------------------------
-void sigHandler(int /* sig_t */ s){
+void sigHandler(int /* sig_t */ s) {
     Command::abortFlag = true;
     std::cerr << "\nCaught signal " << std::endl;
 }
@@ -299,28 +291,27 @@ const std::string currentDateTime(time_t& now) {
 
 
 //-------------------------------------------------------------------------------------------------
-int main(int argc, char* argv[])
-{  
+int main(int argc, char* argv[]) {
     CmdEncrypt  encryptFile;
     CmdDecrypt  decryptFile;
-    
+
     CmdHide     hideDir(IS_DIR_END);
     CmdUnhide   unhideDir(IS_DIR_END);
     CmdHide     hideFile(IS_FILE);
     CmdUnhide   unhideFile(IS_FILE);
-    
+
     BinNone     doNothing;
-    
+
     Command*    commandPtr = &doNothing;
     StringList  fileDirList;
 
 #ifdef HAVE_WIN
-    if (!SetConsoleCtrlHandler(CtrlHandler, TRUE)) {
+    if (! SetConsoleCtrlHandler(CtrlHandler, TRUE)) {
         std::cerr << "Failed to install sig handler" << endl;
     }
 #else
     // signal(SIGINT, sigHandler);
-    
+
     struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = sigHandler;
     sigemptyset(&sigIntHandler.sa_mask);
@@ -329,9 +320,9 @@ int main(int argc, char* argv[])
         std::cerr << "Failed to install sig handler" << endl;
     }
 #endif
-    
+
     EnableCommaCout();
-    
+
     if (argc == 1)  {
         showHelp(argv[0]);
     } else {
@@ -339,99 +330,95 @@ int main(int argc, char* argv[])
 
         bool doParseCmds = true;
         string endCmds = "--";
-        for (int argn = 1; argn < argc; argn++)
-        {
-            if (*argv[argn] == '-' && doParseCmds)
-            {
+        for (int argn = 1; argn < argc; argn++) {
+            if (*argv[argn] == '-' && doParseCmds) {
                 lstring argStr(argv[argn]);
                 Split cmdValue(argStr, "=", 2);
-                if (cmdValue.size() == 2)
-                {
+                if (cmdValue.size() == 2) {
                     lstring cmd = cmdValue[0];
                     lstring value = cmdValue[1];
 
-                    switch (cmd[(unsigned)1])
-                    {
-                        case 's':
-                            if (ValidOption("separator", cmd+1)) {
-                                commandPtr->separator = ConvertSpecialChar(value);
-                            }
-                            break;
-                        case 'i':
-                            if (ValidOption("includefile", cmd+1)) {
-                                // includeFile=<pat>
-                                ReplaceAll(value, "*", ".*");
-                                commandPtr->includeFilePatList.push_back(getRegEx(value));
-                            }
-                            break;
-                        case 'e':   // excludeFile=<pat>
-                            if (ValidOption("extension", cmd+1, false))  {
-                                commandPtr->extension = value;
-                            }  else if (ValidOption("excludefile", cmd+1))  {
-                                ReplaceAll(value, "*", ".*");
-                                commandPtr->excludeFilePatList.push_back(getRegEx(value));
-                            }
-                            break;
+                    switch (cmd[(unsigned)1]) {
+                    case 's':
+                        if (ValidOption("separator", cmd + 1)) {
+                            commandPtr->separator = ConvertSpecialChar(value);
+                        }
+                        break;
+                    case 'i':
+                        if (ValidOption("includefile", cmd + 1)) {
+                            // includeFile=<pat>
+                            ReplaceAll(value, "*", ".*");
+                            commandPtr->includeFilePatList.push_back(getRegEx(value));
+                        }
+                        break;
+                    case 'e':   // excludeFile=<pat>
+                        if (ValidOption("extension", cmd + 1, false))  {
+                            commandPtr->extension = value;
+                        }  else if (ValidOption("excludefile", cmd + 1))  {
+                            ReplaceAll(value, "*", ".*");
+                            commandPtr->excludeFilePatList.push_back(getRegEx(value));
+                        }
+                        break;
 
-                        case 'k':   // decrypt key
-                            if (ValidOption("key", cmd + 1))  {
-                                commandPtr->keyStr = value;
-                            }
-                            break;
-                        default:
-                            std::cerr << "Unknown parameters " << cmd << std::endl;
-                            optionErrCnt++;
-                            break;
+                    case 'k':   // decrypt key
+                        if (ValidOption("key", cmd + 1))  {
+                            commandPtr->keyStr = value;
+                        }
+                        break;
+                    default:
+                        std::cerr << "Unknown parameters " << cmd << std::endl;
+                        optionErrCnt++;
+                        break;
                     }
                 } else {
                     switch (argStr[(unsigned)1]) {
-                        case '?':
-                            showHelp(argv[0]);
-                            break;
-                        case 'd': //
-                            if (ValidOption("decrypt", argStr + 1)) {
-                                commandPtr = &decryptFile.share(*commandPtr);
-                                continue;
-                            }
-                            break;
-                        case 'e': //
-                            if (ValidOption("encrypt", argStr + 1)) {
-                                commandPtr = &encryptFile.share(*commandPtr);
-                                continue;
-                            }
-                            break;
-                        case 'h':
-                            if (ValidOption("help", argStr + 1, false)) {
-                                showHelp(argv[0]);
-                            } else  if (ValidOption("hidedir", argStr + 1, false)) {
-                                commandPtr = &hideDir.share(*commandPtr);
-                                continue;
-                            } else  if (ValidOption("hidefile", argStr + 1)) {
-                                commandPtr = &hideFile.share(*commandPtr);
-                                continue;
-                            }
-                            break;
-                        case 'n':
-                            if (ValidOption("norun", argStr + 1)) {
-                                commandPtr->dryRun = true;
-                                continue;
-                            }
-                            break;
-                        case 'u':
-                            if (ValidOption("unhidedir", argStr + 1, false)) {
-                                commandPtr = &unhideDir.share(*commandPtr);
-                                continue;
-                            } else  if (ValidOption("unhidefile", argStr + 1)) {
-                                commandPtr = &unhideFile.share(*commandPtr);
-                                continue;
-                            }
-                            break;
-                        case 'v':    
-                            commandPtr->verbose = true;
-                            commandPtr->showFile = true;
+                    case '?':
+                        showHelp(argv[0]);
+                        break;
+                    case 'd': //
+                        if (ValidOption("decrypt", argStr + 1)) {
+                            commandPtr = &decryptFile.share(*commandPtr);
                             continue;
+                        }
+                        break;
+                    case 'e': //
+                        if (ValidOption("encrypt", argStr + 1)) {
+                            commandPtr = &encryptFile.share(*commandPtr);
+                            continue;
+                        }
+                        break;
+                    case 'h':
+                        if (ValidOption("help", argStr + 1, false)) {
+                            showHelp(argv[0]);
+                        } else  if (ValidOption("hidedir", argStr + 1, false)) {
+                            commandPtr = &hideDir.share(*commandPtr);
+                            continue;
+                        } else  if (ValidOption("hidefile", argStr + 1)) {
+                            commandPtr = &hideFile.share(*commandPtr);
+                            continue;
+                        }
+                        break;
+                    case 'n':
+                        if (ValidOption("norun", argStr + 1)) {
+                            commandPtr->dryRun = true;
+                            continue;
+                        }
+                        break;
+                    case 'u':
+                        if (ValidOption("unhidedir", argStr + 1, false)) {
+                            commandPtr = &unhideDir.share(*commandPtr);
+                            continue;
+                        } else  if (ValidOption("unhidefile", argStr + 1)) {
+                            commandPtr = &unhideFile.share(*commandPtr);
+                            continue;
+                        }
+                        break;
+                    case 'v':
+                        commandPtr->verbose = true;
+                        commandPtr->showFile = true;
+                        continue;
                     }
-                    
+
                     if (endCmds == argv[argn]) {
                         doParseCmds = false;
                     } else {
@@ -439,19 +426,17 @@ int main(int argc, char* argv[])
                         optionErrCnt++;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 // Store file directories
                 fileDirList.push_back(argv[argn]);
             }
         }
-        
-        
+
+
         if (commandPtr->begin(fileDirList)) {
             time_t startT;
             std::cerr << "Start " << currentDateTime(startT) << std::endl;
-            
+
             if (patternErrCnt == 0 && optionErrCnt == 0 && fileDirList.size() != 0)  {
                 if (fileDirList.size() == 1 && fileDirList[0] == "-") {
                     lstring filePath;
@@ -459,8 +444,7 @@ int main(int argc, char* argv[])
                         size_t filesChecked = InspectFiles(*commandPtr, filePath, 0);
                         std::cerr << "\n  Files Checked=" << filesChecked << std::endl;
                     }
-                }
-                else {
+                } else {
                     for (lstring& filePath : fileDirList)  {
                         size_t filesChecked = InspectFiles(*commandPtr, filePath, 0);
                         std::cerr << "\n  Files Checked=" << filesChecked << std::endl;
@@ -472,11 +456,11 @@ int main(int argc, char* argv[])
             time_t endT;
             std::cerr << "\nEnd " << currentDateTime(endT) << std::endl;
             std::cout << "Elapsed " << std::difftime(endT, startT) << " s.\n";
-            
+
         }
-        
+
         std::cerr << std::endl;
     }
-    
+
     return 0;
 }

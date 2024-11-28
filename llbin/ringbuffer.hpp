@@ -41,25 +41,23 @@ typedef unsigned int sizeT;
 #include <assert.h>
 
 template <class T>
-class RingBuffer
-{
+class RingBuffer {
 public:
     RingBuffer(sizeT size = 100)
         : m_size(size), m_buffer(new T[size]), m_rIndex(0), m_wIndex(0)
-        { assert(size > 1 && m_buffer != nullptr); }
+    { assert(size > 1 && m_buffer != nullptr); }
 
     ~RingBuffer()
-        { delete [] m_buffer; };
+    { delete [] m_buffer; };
 
     sizeT Next(sizeT n) const
-        { return (n+1)%m_size; }
+    { return (n + 1) % m_size; }
     bool Empty() const
-        { return (m_rIndex == m_wIndex); }
+    { return (m_rIndex == m_wIndex); }
     bool Full() const
-        { return (Next(m_wIndex) == m_rIndex); }
+    { return (Next(m_wIndex) == m_rIndex); }
 
-    bool Put( T& value)
-    {
+    bool Put( T& value) {
         if (Full())
             return false;
         m_buffer[m_wIndex] = value;
@@ -67,8 +65,7 @@ public:
         return true;
     }
 
-    bool Get(T& value)
-    {
+    bool Get(T& value) {
         if (Empty())
             return false;
         value = m_buffer[m_rIndex];

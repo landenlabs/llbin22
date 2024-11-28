@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------
 //
-// File: cmdaxx.cpp      C U R R R E N T L Y   N O T   U S E D 
+// File: cmdaxx.cpp      C U R R R E N T L Y   N O T   U S E D
 //
 //-------------------------------------------------------------------------------------------------
 //
@@ -43,7 +43,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
- 
+
 #include <ctype.h>
 #include <vector>
 #include <map>
@@ -51,7 +51,7 @@
 #include <regex>
 #include <exception>
 #include <errno.h>
- 
+
 #include "ll_stdhdr.hpp"
 #include "commands.hpp"
 #include "directory.hpp"

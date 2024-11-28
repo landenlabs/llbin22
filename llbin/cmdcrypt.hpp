@@ -4,7 +4,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of llbin project.
@@ -50,11 +50,11 @@
 class CmdCryptBase : public Command {
 protected:
     bool isEncrypt;
-   
+
 public:
     CmdCryptBase(const char* name) : Command(name) {}
     CmdCryptBase(const string& name) : Command(name) {}
-    
+
     virtual bool begin(StringList& fileDirList);
     virtual size_t add( lstring& file, DIR_TYPES dtype);
     virtual bool allOfFile(const lstring& extn) = 0;
@@ -63,8 +63,8 @@ public:
 
 class CmdDecrypt : public CmdCryptBase {
 public:
-    CmdDecrypt() : CmdCryptBase("decrypt")  { isEncrypt=false; }
-    
+    CmdDecrypt() : CmdCryptBase("decrypt")  { isEncrypt = false; }
+
     // virtual size_t add( lstring& file, DIR_TYPES dtype);
     virtual bool end();
     virtual bool allOfFile(const lstring& extn);
@@ -74,10 +74,10 @@ public:
 
 class CmdEncrypt : public CmdCryptBase {
     std::map<std::string, unsigned int> ignoredExtn;
-    
+
 public:
-    CmdEncrypt() : CmdCryptBase("encrypt") { isEncrypt=true; }
-    
+    CmdEncrypt() : CmdCryptBase("encrypt") { isEncrypt = true; }
+
     // virtual size_t add( lstring& file, DIR_TYPES dtype);
     virtual bool end();
     virtual bool allOfFile(const lstring& extn);

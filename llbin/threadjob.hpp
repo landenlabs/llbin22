@@ -54,8 +54,8 @@ public:
     std::thread thread1;
     bool        allOfFile;
     bool        verbose;
-    
-   
+
+
     ThreadJob(Command& _cmd, const lstring& _name, bool _allOfFile, bool _verbose = false) :
         command(_cmd),
         name(_name),
@@ -63,10 +63,10 @@ public:
         verbose(_verbose),
         thread1(&ThreadJob::doJobThreadFnc, this)
     { }
-    
+
     ~ThreadJob()
     { }
-    
+
     ThreadJob& operator=( ThreadJob& other) {
         if (this != &other) {
             command = other.command;
@@ -80,10 +80,10 @@ public:
 
     // Start thread to save image.
     static bool StartThread(Command& cmd, const lstring& _name, bool allOfFile);
-    
+
     // Wait for pending threads to complete.
     static void EndThreads();
-    
+
 private:
     void doJobThreadFnc();
 };

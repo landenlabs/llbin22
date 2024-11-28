@@ -4,7 +4,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021 
+// Author: Dennis Lang - 2021
 // http://landenlabs.com
 //
 // This file is part of llbin project.
@@ -62,7 +62,7 @@ public:
     bool showFile = false;
     bool verbose = false;
     bool dryRun = false;
-    
+
     lstring separator = "\n";
 
     static volatile unsigned countDone;
@@ -72,28 +72,28 @@ public:
 protected:
     lstring none;
     string my_name;
-  
+
 public:
     static void init();
-    
+
     Command(const char* name) : my_name(name) {
     }
     Command(const string& name) : my_name(name) {
     }
-    
+
     const string& name() const { return my_name; }
-   
+
     virtual  bool begin(StringList& fileDirList)  {
         return fileDirList.size() > 0;
     }
 
     virtual size_t add( lstring& file, DIR_TYPES dtypes) = 0;
-    
+
     // Call if threads used to complete the work normally done in add.
     virtual void doJob(const lstring& fullname, bool allOfFile) {
         std::cerr << "Thread job ignored for (e=encode/d=decode)[" << my_name << "] of " << fullname << std::endl;
     }
-    
+
     virtual bool end() {
         return true;
     }
@@ -103,11 +103,11 @@ public:
         excludeFilePatList = other.excludeFilePatList;
         keyStr = other.keyStr;
         extension = other.extension;
-        
+
         showFile = other.showFile;
         verbose = other.verbose;
         dryRun = other.dryRun;
-        
+
         separator = other.separator;
         return *this;
     }

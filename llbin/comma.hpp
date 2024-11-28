@@ -34,45 +34,41 @@
 #include <locale>
 
 template <typename Ch>
-class numfmt: public std::numpunct<Ch>
-{
-  int group;    // Number of characters in a group
-  Ch  separator; // Character to separate groups
+class numfmt: public std::numpunct<Ch> {
+    int group;    // Number of characters in a group
+    Ch  separator; // Character to separate groups
 public:
-  numfmt(Ch sep, int grp): separator(sep), group(grp) {}
+    numfmt(Ch sep, int grp): separator(sep), group(grp) {}
 private:
-  Ch do_thousands_sep() const { return separator; }
-  std::string do_grouping() const { return std::string(1, group); }
+    Ch do_thousands_sep() const { return separator; }
+    std::string do_grouping() const { return std::string(1, group); }
 };
 
-inline void EnableCommaCout()
-{
+inline void EnableCommaCout() {
 #if 0
     char sep = ',';
     int group = 3;
     std::cout.imbue(std::locale(std::locale(),
         new numfmt<char>(sep, group)));
 #else
-	std::locale mylocale("");   // Get system locale
-	std::cout.imbue(mylocale);
+    std::locale mylocale("");   // Get system locale
+    std::cout.imbue(mylocale);
 #endif
 }
 
-inline void DisableCommaCout()
-{
+inline void DisableCommaCout() {
     std::cout.imbue(std::locale(std::locale()));
 }
 
 #if defined(__APPLE__) && defined(__MACH__)
-#include <printf.h>
-#define PRINTF(a,b) xprintf(_domain, NULL, a,b)
-static printf_domain_t _domain;
+    #include <printf.h>
+    #define PRINTF(a,b) xprintf(_domain, NULL, a,b)
+    static printf_domain_t _domain;
 #else
-#define PRINTF(a,b) printf(a,b)
+    #define PRINTF(a,b) printf(a,b)
 #endif
 
-inline void initPrintf()
-{
+inline void initPrintf() {
 #if defined(__APPLE__) && defined(__MACH__)
     _domain = new_printf_domain();
     setlocale(LC_ALL, "en_US.UTF-8");

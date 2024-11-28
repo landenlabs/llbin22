@@ -39,7 +39,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
- 
+
 #include <ctype.h>
 #include <vector>
 #include <map>
@@ -47,7 +47,7 @@
 #include <regex>
 #include <exception>
 #include <errno.h>
- 
+
 #include "ll_stdhdr.hpp"
 #include "commands.hpp"
 #include "directory.hpp"
@@ -67,11 +67,9 @@ const string quote(const string& str) {
 #ifdef HAVE_WIN
 
 //-------------------------------------------------------------------------------------------------
-std::string GetErrorMsg(DWORD error)
-{
+std::string GetErrorMsg(DWORD error) {
     std::string errMsg;
-    if (error != 0)
-    {
+    if (error != 0) {
         LPTSTR pszMessage;
         FormatMessage(
             FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -94,8 +92,7 @@ std::string GetErrorMsg(DWORD error)
 
 //-------------------------------------------------------------------------------------------------
 // Has statics - not thread safe.
-const char* RunExtension(std::string& exeName)
-{
+const char* RunExtension(std::string& exeName) {
     // Cache results - return previous match
     static const char* s_extn = NULL;
     static std::string s_lastExeName;
@@ -114,8 +111,7 @@ const char* RunExtension(std::string& exeName)
     // Expensive - search PATH for executable.
     char fullPath[MAX_PATH];
     static const char* s_extns[] = { NULL, ".exe", ".com", ".cmd", ".bat", ".ps" };
-    for (unsigned idx = 0; idx != ARRAYSIZE(s_extns); idx++)
-    {
+    for (unsigned idx = 0; idx != ARRAYSIZE(s_extns); idx++) {
         s_extn = s_extns[idx];
         DWORD foundPathLen = SearchPath(NULL, exeName.c_str(), s_extn, ARRAYSIZE(fullPath), fullPath, NULL);
         if (foundPathLen != 0)
@@ -126,8 +122,7 @@ const char* RunExtension(std::string& exeName)
 }
 
 //-------------------------------------------------------------------------------------------------
-bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
-{
+bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec) {
     std::string tmpCommand(command);
     /*
     const char* pEndExe = strchr(command, ' ');
@@ -160,7 +155,7 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
     memset(&pi, 0, sizeof(pi));
 
     // Start the child process.
-    if (!CreateProcess(
+    if (! CreateProcess(
         NULL,   // No module name (use command line)
         (LPSTR)tmpCommand.c_str(), // Command line
         NULL,           // Process handle not inheritable
@@ -170,8 +165,7 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
         NULL,           // Use parent's environment block
         NULL,           // Use parent's starting directory
         &si,            // Pointer to STARTUPINFO structure
-        &pi))           // Pointer to PROCESS_INFORMATION structure
-    {
+        &pi)) {         // Pointer to PROCESS_INFORMATION structure
         DWORD err = GetLastError();
         if (pExitCode)
             *pExitCode = err;
@@ -182,11 +176,10 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
     // Wait until child process exits.
     DWORD createStatus = WaitForSingleObject(pi.hProcess, waitMsec);
 
-    if (pExitCode)
-    {
+    if (pExitCode) {
         *pExitCode = createStatus;
-        if (createStatus == 0 && !GetExitCodeProcess(pi.hProcess, pExitCode))
-            *pExitCode = (DWORD)-1;
+        if (createStatus == 0 && ! GetExitCodeProcess(pi.hProcess, pExitCode))
+            *pExitCode = (DWORD) -1;
     }
 
     // Close process and thread handles.
@@ -199,16 +192,15 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
 
 #else
 //-------------------------------------------------------------------------------------------------
-bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec)
-{
+bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec) {
     std::vector<char> buffer(128);
     std::string result;
 
     auto pipe = popen(command, "r"); // get rid of shared_ptr
-    if (!pipe)
+    if (! pipe)
         throw std::runtime_error("popen() failed!");
 
-    while (!feof(pipe)) {
+    while (! feof(pipe)) {
         if (fgets(buffer.data(), 128, pipe) != nullptr)
             result += buffer.data();
     }
@@ -240,7 +232,7 @@ lstring& getName(lstring& outName, const lstring& inPath) {
 //-------------------------------------------------------------------------------------------------
 // Extract name part from path
 lstring& getDir(lstring& outDir, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(SLASH_CHAR)+1;
+    size_t nameStart = inPath.rfind(SLASH_CHAR) +1;
     if (nameStart == 0)
         outDir = "";
     else
@@ -272,8 +264,8 @@ void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lst
         outDir = inPath.substr(0, nameStart);
         outName = inPath.substr(nameStart);
     }
-    
-    size_t extPos= outName.rfind(EXTN_CHAR) + 1;
+
+    size_t extPos = outName.rfind(EXTN_CHAR) + 1;
     if (extPos == 0)
         outExt = "";
     else {
@@ -296,8 +288,7 @@ lstring& getExtn(lstring& outExt, const lstring& inPath) {
 
 //-------------------------------------------------------------------------------------------------
 // Extract name part from path.
-lstring& removeExtn(lstring& outName, const lstring& inPath)
-{
+lstring& removeExtn(lstring& outName, const lstring& inPath) {
     size_t extnPos = inPath.rfind(EXTN_CHAR);
     if (extnPos == std::string::npos)
         outName = inPath;
@@ -308,8 +299,7 @@ lstring& removeExtn(lstring& outName, const lstring& inPath)
 
 //-------------------------------------------------------------------------------------------------
 // Return true if inName matches pattern in patternList
-bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult)
-{
+bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult) {
     if (patternList.empty() || inName.empty())
         return emptyResult;
 
@@ -329,7 +319,7 @@ size_t fileLength(const lstring& path) {
 
 //-------------------------------------------------------------------------------------------------
 bool deleteFile(const char* path) {
-    
+
 #if defined(_WIN32) || defined(_WIN64)
     SetFileAttributes(path, FILE_ATTRIBUTE_NORMAL);
     if (0 == DeleteFile(path)) {
