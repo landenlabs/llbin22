@@ -56,6 +56,8 @@ public:
     // Runtime options
     PatternList includeFilePatList;
     PatternList excludeFilePatList;
+    PatternList includePathPatList;
+    PatternList excludePathPatList;
     lstring keyStr;
     lstring extension = ".b22";
 

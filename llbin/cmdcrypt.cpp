@@ -30,14 +30,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "ll_stdhdr.hpp"
+#include "cmdcrypt.hpp"
+#include "directory.hpp"
 
 #include <stdio.h>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-
 #include <ctype.h>
 #include <vector>
 #include <map>
@@ -45,11 +46,6 @@
 #include <regex>
 #include <exception>
 #include <errno.h>
-
-#include "ll_stdhdr.hpp"
-#include "cmdcrypt.hpp"
-#include "directory.hpp"
-#include "split.hpp"
 
 
 static const unsigned BLOCK_SIZE = 1024;

@@ -31,15 +31,15 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "cmdutils.hpp"
-
+#include "ll_stdhdr.hpp"
+#include "commands.hpp"
+#include "directory.hpp"
 
 #include <stdio.h>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-
 #include <ctype.h>
 #include <vector>
 #include <map>
@@ -47,14 +47,6 @@
 #include <regex>
 #include <exception>
 #include <errno.h>
-
-#include "ll_stdhdr.hpp"
-#include "commands.hpp"
-#include "directory.hpp"
-#include "split.hpp"
-
-
-
 
 namespace CmdUtils {
 
