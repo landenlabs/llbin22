@@ -155,6 +155,8 @@ size_t CmdHide::add( lstring& fullname, DIR_TYPES _dtype) {
 
     if (_dtype == dtype
             && ! name.empty()
+            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
+            && CmdUtils::FileMatches(fullname, includePathPatList, true)
             && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
             && CmdUtils::FileMatches(name, includeFilePatList, true)
             && name.find(HIDE_PREFIX) != 0
@@ -233,6 +235,8 @@ size_t CmdUnhide::add(lstring& fullname, DIR_TYPES _dtype) {
 
     if (_dtype == dtype
             && ! name.empty()
+            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
+            && CmdUtils::FileMatches(fullname, includePathPatList, true)
             && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
             && CmdUtils::FileMatches(name, includeFilePatList, true)
     && name.find(HIDE_PREFIX) == 0

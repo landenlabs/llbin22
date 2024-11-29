@@ -13,4 +13,4 @@ set src=./DerivedData/Build/Products/Release/$app
 
 echo "File ß$src"
 ls -al $src
-cp $src ~/opt/bin/
+cp $src ~/opt/bin/llbin22

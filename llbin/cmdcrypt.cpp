@@ -138,6 +138,8 @@ size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype) {
 
     if (dtype == IS_FILE
             && ! name.empty()
+            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
+            && CmdUtils::FileMatches(fullname, includePathPatList, true)
             && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
             && CmdUtils::FileMatches(name, includeFilePatList, true)) {
         fileCount++;

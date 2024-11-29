@@ -122,7 +122,7 @@ static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth) 
 
 //-------------------------------------------------------------------------------------------------
 void showHelp(char* name) {
-    const char* helpMsg =  "  Dennis Lang v2.3 (landenlabs.com) " __DATE__   "\n"
+    const char* helpMsg =  "  Dennis Lang v2.4 (landenlabs.com) " __DATE__   "\n"
         "\nDes: 'Manipulate Binary Files\n"
         "Use: llbin [options] directories...   or  files\n"
         "\n"
