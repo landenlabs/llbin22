@@ -61,7 +61,7 @@ public:
         name(_name),
         allOfFile(_allOfFile),
         verbose(_verbose),
-        thread1(&ThreadJob::doJobThreadFnc, this)
+        thread1(&ThreadJob::doJobThreadFnc, this)  // starts thread
     { }
 
     ~ThreadJob()

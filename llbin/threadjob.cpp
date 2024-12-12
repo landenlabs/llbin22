@@ -45,6 +45,15 @@ void ThreadJob::doJobThreadFnc() {
 bool ThreadJob::StartThread(Command& cmd, const lstring& name, bool allOfFile) {
     ThreadJob* jobPtr;
 
+    // TODO -
+    //      Rather then wait for next item sequencial to finish, find any jobs which are
+    //      done in list so we don't wait for next job, but find any job that has completed.
+    //      Have a global thread pointer which can be populated atomically by any job
+    //      that completes so this logic does not have to search the list, but just peek
+    //      at the global "jobDone" value to find item to remove from the list.
+    //
+    // or   sort queue by isDone flag then pop items off.
+    
     if (jobQueue.Full()) {
         jobQueue.Get(jobPtr);
         // std::cerr << "Save Queue Full - join thread " << saveAuxPtr->name << std::endl;
