@@ -4,14 +4,14 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021
+// Author: Dennis Lang - 2022
 // https://landenlabs.com
 //
 // This file is part of llbin project.
 //
 // ----- License ----
 //
-// Copyright (c) 2021  Dennis Lang
+// Copyright (c) 2022  Dennis Lang
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "directory.hpp"
 
 #include <iostream>
-#include <stdio.h>
 #include <errno.h>
+#include <stdio.h>
 
-#include "ll_stdhdr.hpp"
-#include "directory.hpp"
 
 #ifdef HAVE_WIN
 
@@ -89,8 +88,6 @@ bool Directory_files::begin() {
         dir = ".";    // Default to current directory
 
     DWORD attr = GetFileAttributes(dir);
-    int err = GetLastError();       // Error 3 = invalid path.
-
     if (isDir(attr)) {
         dir += ANY;
     } else { // if (attr != INVALID_FILE_ATTRIBUTES)
@@ -106,7 +103,7 @@ bool Directory_files::begin() {
 
     while (is_more
         && (isDir(my_dirent.dwFileAttributes)
-    && strspn(my_dirent.cFileName, ".") == strlen(my_dirent.cFileName) )) {
+        && strspn(my_dirent.cFileName, ".") == strlen(my_dirent.cFileName) )) {
         is_more = (FindNextFile(my_dir_hnd, &my_dirent) != 0);
     }
 
@@ -126,8 +123,7 @@ bool Directory_files::more() {
             is_more = (FindNextFile(my_dir_hnd, &my_dirent) != 0);
         } while (is_more
             && (isDir(my_dirent.dwFileAttributes)
-        && strspn(my_dirent.cFileName, ".") == strlen(my_dirent.cFileName)));
-
+            && strspn(my_dirent.cFileName, ".") == strlen(my_dirent.cFileName)));
     }
 
     return is_more;
@@ -140,8 +136,7 @@ bool Directory_files::is_directory() const {
 
 //-------------------------------------------------------------------------------------------------
 const char* Directory_files::name() const {
-    return (my_dir_hnd != INVALID_HANDLE_VALUE) ?
-        my_dirent.cFileName : NULL;
+    return (my_dir_hnd != INVALID_HANDLE_VALUE) ? my_dirent.cFileName : NULL;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -156,12 +151,10 @@ bool Directory_files::exists( const char* path) {
     return (attr != INVALID_FILE_ATTRIBUTES);
 }
 
-
-
 #else
 
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 lstring Directory_files::SLASH = "/";
 
