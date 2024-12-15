@@ -1,14 +1,14 @@
 #!/bin/tcsh
 
-find DerivedData/Build/Products/Release -name llbin
-set llbin=../DerivedData/Build/Products/Release/llbin
+find DerivedData/Build/Products/Release -name llbin22
+set llbin22=../DerivedData/Build/Products/Release/llbin22
 
 pushd test-run
     rm test*
     cp ../test-org/test* .
 
-    $llbin -enc test* |& grep "^End"
-    $llbin -dec test* |& grep "^End"
+    $llbin22 -enc test* |& grep "^End"
+    $llbin22 -dec test* |& grep "^End"
 
     # corrupt one file
     ls >! test.csh
@@ -27,17 +27,17 @@ pushd test-run
     if (0) then
         echo --- Test custom key and custom extension
         cp -n -f ../test-org/test.csh .
-        llbin -key=hello -ext=.hello -enc test.csh |& grep "Checked"
+        llbin22 -key=hello -ext=.hello -enc test.csh |& grep "Checked"
         md5 test*
-        llbin -key=hello -ext=.hello -dec test* |& grep "Checked"
+        llbin22 -key=hello -ext=.hello -dec test* |& grep "Checked"
         md5 test.csh ../test-org/test.csh
         rm test.*
 
         echo --- Test custom key and custom extension, decrypt with wrong key
         cp -n -f ../test-org/test.csh .
-        llbin -key=world -ext=.world -enc test.csh |& grep "Checked"
+        llbin22 -key=world -ext=.world -enc test.csh |& grep "Checked"
         md5 test*
-        llbin -key=hello -ext=.world -dec test* |& grep "Checked"
+        llbin22 -key=hello -ext=.world -dec test* |& grep "Checked"
         md5 test.csh ../test-org/test.csh
         rm test.*
     endif
