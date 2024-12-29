@@ -42,6 +42,10 @@
     <ClInclude Include="..\llbin22\parseutil.hpp" />
     <ClInclude Include="..\llbin22\ringbuffer.hpp" />
     <ClInclude Include="..\llbin22\threadjob.hpp" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="llbin22.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
