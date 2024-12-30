@@ -1,19 +1,19 @@
 llbin22
 ### Binary file encryption
 
-### Builds
-* OSX(M3)      | Provided Xcode project
-* Windows/DOS  | Provided Visual Studio solution
-
-### Visit home website
-[https://landenlabs.com](https://landenlabs.com)
-
 ### Description
 
 C++ v17 code to build either a windows/dos or Mac/Linux command line tool
 that can scan directories and encrypt files.
 
 ***NOTE*** This is an experiment. 
+
+### Builds
+* OSX(M3)      | Provided Xcode project
+* Windows/DOS  | Provided Visual Studio solution
+
+### Visit home website
+[https://landenlabs.com](https://landenlabs.com)
 
 ### Help Banner:
 <pre>
@@ -46,6 +46,5 @@ Use: llbin22 [options] directories...   or  files
    llbin22 -inc=a*.png -inc=*.jpg -ex=foo.jpg -key=123456 -encrypt dir1/subdir dir2
    llbin22 -inc=a*.aax -inc=b*.aax -ex=foo.* -encrypt dir1/subdir dir2/subdir dir3/subdir
    llbin22 -inc=*b22 -decryp dir1/subdir dir2/subdir dir3/subdir
-
-
 </pre>
+[Top](#top)
