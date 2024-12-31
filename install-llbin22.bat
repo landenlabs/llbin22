@@ -8,7 +8,6 @@ if not exist "%dstdir" (
  if exist d:\opt\bin  set dstdir=d:\opt\bin
 )
 
-echo "msbuild=%msbuild%"
 if not exist "%msbuild%" (
 echo Fall back msbuild not found at "%msbuild%"
 set msbuild=F:\opt\VisualStudio\2022\Preview\MSBuild\Current\Bin\MSBuild.exe
@@ -31,7 +30,7 @@ if not exist "%prog%-ms\x64\Release\%prog%.exe" (
 )
 
 @echo.
-@echo Copy Release to d:\opt\bin
+@echo Copy Release to %dstdir%
 :: dir %prog%-ms\x64\Release\%prog%.exe
 copy %prog%-ms\x64\Release\%prog%.exe %dstdir%\%prog%.exe
 
