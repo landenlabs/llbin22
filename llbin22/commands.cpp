@@ -60,7 +60,7 @@ static size_t isWriteableFile(const struct stat& info) {
 size_t BinNone::add( lstring& fullname, DIR_TYPES dtype) {
     size_t fileCount = 0;
     lstring name;
-    CmdUtils::getName(name, fullname);
+    DirUtil::getName(name, fullname);
 
     if (dtype == IS_FILE
             && ! name.empty()

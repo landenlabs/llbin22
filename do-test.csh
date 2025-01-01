@@ -1,19 +1,27 @@
 #!/bin/tcsh
 
-find DerivedData/Build/Products/Release -name llbin22
+# find DerivedData/Build/Products/Release -name llbin22
 set llbin22=../DerivedData/Build/Products/Release/llbin22
 
-pushd test-run
-    rm test*
+cd test-run
+    rm test* >& /dev/null
     cp ../test-org/test* .
 
+    echo --- Original files
+    ls -al test*
+
+    echo
+    echo --- Encrypted files
     $llbin22 -enc test* |& grep "^End"
+    ls -al test*
+    
     $llbin22 -dec test* |& grep "^End"
 
     # corrupt one file
     ls >! test.csh
 
     # compare files.
+    echo 
     echo --- Compare decrypt to original,  0 = files are the same.
     echo test.csh has been corrupt and should be different.
     foreach foo ( test* )
@@ -21,7 +29,7 @@ pushd test-run
       echo "   $status $foo"
     end
 
-    rm test*
+    # rm test*
 
     # The key option is not yet implemented. 
     if (0) then
@@ -41,6 +49,6 @@ pushd test-run
         md5 test.csh ../test-org/test.csh
         rm test.*
     endif
-popd
+cd ..
 
 

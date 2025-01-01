@@ -47,17 +47,7 @@ const std::string quote(const std::string& str);
 std::string GetErrorMsg(UInt error);
 const char* RunExtension(std::string& exeName);
 bool RunCommand(const char* command, UInt* pExitCode, int waitMsec);
-// size_t isWriteableFile(const struct stat& info);
 
-lstring& getName(lstring& outName, const lstring& inPath);
-lstring& getDir(lstring& outDir, const lstring& inPath);
-void getDirName(lstring& outDir, lstring& outName, const lstring& inPath);
-void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath);
-lstring& getExtn(lstring& outExt, const lstring& inPath);
-
-lstring& removeExtn(lstring& outName, const lstring& inPath);
 bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult);
-
-size_t fileLength(const lstring& path);
-bool deleteFile(const char* path);
+void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath);
 }

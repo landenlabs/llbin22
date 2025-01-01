@@ -212,41 +212,7 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec) {
 #endif
 
 
-//-------------------------------------------------------------------------------------------------
-// Extract name part from path, name includes extension
-lstring& getName(lstring& outName, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(SLASH_CHAR) + 1;
-    if (nameStart == 0)
-        outName = inPath;
-    else
-        outName = inPath.substr(nameStart);
-    return outName;
-}
-
-//-------------------------------------------------------------------------------------------------
-// Extract name part from path
-lstring& getDir(lstring& outDir, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(SLASH_CHAR) +1;
-    if (nameStart == 0)
-        outDir = "";
-    else
-        outDir = inPath.substr(0, nameStart);
-    return outDir;
-}
-
-//-------------------------------------------------------------------------------------------------
-// Extract directory and name parts from path
-void getDirName(lstring& outDir, lstring& outName, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(SLASH_CHAR) +1;
-    if (nameStart == 0) {
-        outDir = "";
-        outName = inPath;
-    } else {
-        outDir = inPath.substr(0, nameStart);
-        outName = inPath.substr(nameStart);
-    }
-}
-
+const char EXTN_CHAR = '.';
 //-------------------------------------------------------------------------------------------------
 // Extract directory, name and extension parts from path
 void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath) {
@@ -270,28 +236,6 @@ void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lst
 }
 
 //-------------------------------------------------------------------------------------------------
-// Return just extension, not including dot.
-lstring& getExtn(lstring& outExt, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(EXTN_CHAR) + 1;
-    if (nameStart == 0)
-        outExt = "";
-    else
-        outExt = inPath.substr(nameStart, -1);
-    return outExt;
-}
-
-//-------------------------------------------------------------------------------------------------
-// Extract name part from path.
-lstring& removeExtn(lstring& outName, const lstring& inPath) {
-    size_t extnPos = inPath.rfind(EXTN_CHAR);
-    if (extnPos == std::string::npos)
-        outName = inPath;
-    else
-        outName = inPath.substr(0, extnPos);
-    return outName;
-}
-
-//-------------------------------------------------------------------------------------------------
 // Return true if inName matches pattern in patternList
 bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult) {
     if (patternList.empty() || inName.empty())
@@ -302,31 +246,6 @@ bool FileMatches(const lstring& inName, const PatternList& patternList, bool emp
             return true;
 
     return false;
-}
-
-//-------------------------------------------------------------------------------------------------
-// TODO - move to directory.h
-size_t fileLength(const lstring& path) {
-    struct stat info;
-    return (stat(path, &info) == 0) ? info.st_size : 0;
-}
-
-//-------------------------------------------------------------------------------------------------
-bool deleteFile(const char* path) {
-
-#if defined(_WIN32) || defined(_WIN64)
-    SetFileAttributes(path, FILE_ATTRIBUTE_NORMAL);
-    if (0 == DeleteFile(path)) {
-        DWORD err = GetLastError();
-        if (err != ERROR_FILE_NOT_FOUND) {  // 2 = ERROR_FILE_NOT_FOUND
-            std::cerr << err << " error trying to delete " << path << std::endl;
-            return false;
-        }
-    }
-#else
-    unlink(path);
-#endif
-    return true;
 }
 
 // End namespace

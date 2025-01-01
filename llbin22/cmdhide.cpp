@@ -149,7 +149,7 @@ bool CmdHide::begin(StringList& fileDirList) {
 size_t CmdHide::add( lstring& fullname, DIR_TYPES _dtype) {
     size_t fileCount = 0;
     lstring name;
-    CmdUtils::getName(name, fullname);
+    DirUtil::getName(name, fullname);
     lstring oldPath = fullname;
     struct stat info;
 
@@ -229,7 +229,7 @@ bool CmdUnhide::begin(StringList& fileDirList) {
 size_t CmdUnhide::add(lstring& fullname, DIR_TYPES _dtype) {
     size_t fileCount = 0;
     lstring name;
-    CmdUtils::getName(name, fullname);
+    DirUtil::getName(name, fullname);
     lstring oldPath = fullname;
     struct stat info;
 

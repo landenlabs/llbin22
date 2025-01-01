@@ -133,7 +133,7 @@ bool CmdCryptBase::begin(StringList& fileDirList) {
 size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype) {
     size_t fileCount = 0;
     lstring name;
-    CmdUtils::getName(name, fullname);
+    DirUtil::getName(name, fullname);
 
 
     if (dtype == IS_FILE
@@ -174,10 +174,10 @@ size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype) {
 //-------------------------------------------------------------------------------------------------
 static bool makeEncryptName(const lstring& ext, lstring& out, const lstring& in) {
     lstring extn;
-    CmdUtils::getExtn(extn, in);
+    DirUtil::getExt(extn, in);
     extn = extn.toLower();
     if (EXT_ABBR.find(extn) != EXT_ABBR.end()) {
-        CmdUtils::removeExtn(out, in);
+        DirUtil::removeExtn(out, in);
         out += ".";
         out += EXT_ABBR[extn];
         out += ext;
@@ -189,10 +189,10 @@ static bool makeEncryptName(const lstring& ext, lstring& out, const lstring& in)
 //-------------------------------------------------------------------------------------------------
 static bool makeDecryptName(lstring& out, const lstring& in) {
     lstring extn;
-    CmdUtils:: getExtn(extn, CmdUtils::removeExtn(out, in));
+    DirUtil::getExt(extn, DirUtil::removeExtn(out, in));
     extn = extn.toLower();
     if (ABBR_EXT.find(extn) != ABBR_EXT.end()) {
-        CmdUtils::removeExtn(out, out);
+        DirUtil::removeExtn(out, out);
         out += ".";
         out += ABBR_EXT[extn];
         return true;
@@ -224,7 +224,7 @@ void CmdDecrypt::doJob(const lstring& fullname, bool allOfFile)  {
     Byte block[BLOCK_SIZE];
     lstring newname;
     if (makeDecryptName(newname, fullname)) {
-        size_t fileLen = CmdUtils::fileLength(fullname);
+        size_t fileLen = DirUtil::fileLength(fullname);
         std::basic_fstream<Byte> fileStream(fullname, ios::out | ios::in | ios::binary);
 
         size_t offset = 0;
@@ -264,7 +264,7 @@ bool CmdDecrypt::end() {
 
 bool CmdDecrypt::allOfFile(const lstring& name) {
     lstring extn,  name2;
-    CmdUtils::getExtn(extn, CmdUtils::removeExtn(name2, name));    // remove b22 ext first
+    DirUtil::getExt(extn, DirUtil::removeExtn(name2, name));    // remove b22 ext first
     // std::cerr << "extn=" << extn << "\n";
     // for (lstring const& ext : DEC_FULL_SET) std::cerr << ext << ' ';
     // std::cerr << std::endl;
@@ -280,7 +280,7 @@ void CmdEncrypt::doJob(const lstring& fullname, bool allOfFile)  {
 
     if (makeEncryptName(extension, newname, fullname)) {
         if (! dryRun) {
-            size_t fileLen = CmdUtils::fileLength(fullname);
+            size_t fileLen = DirUtil::fileLength(fullname);
             std::basic_fstream<Byte> fileStream(fullname, ios::out | ios::in | ios::binary);
 
             size_t offset = 0;
@@ -313,7 +313,7 @@ void CmdEncrypt::doJob(const lstring& fullname, bool allOfFile)  {
         }
     } else {
         lstring extn;
-        CmdUtils::getExtn(extn, fullname);
+        DirUtil::getExt(extn, fullname);
         extn = extn.toLower();
         if (verbose)
             std::cerr << "Ignored extension=" << extn << " of " << fullname << std::endl;
@@ -339,5 +339,5 @@ bool CmdEncrypt::end() {
 
 bool CmdEncrypt::allOfFile(const lstring& name) {
     lstring extn;
-    return EXT_FULL_SET.find(CmdUtils::getExtn(extn, name)) != EXT_FULL_SET.end();
+    return EXT_FULL_SET.find(DirUtil::getExt(extn, name)) != EXT_FULL_SET.end();
 }

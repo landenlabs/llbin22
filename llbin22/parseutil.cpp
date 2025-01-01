@@ -1,16 +1,10 @@
 //-------------------------------------------------------------------------------------------------
-// File: parseutil.hpp
+// File: parseutil.cpp
 // Author: Dennis Lang
 //
 // Desc: Parsing utility functions.
 //
 //-------------------------------------------------------------------------------------------------
-//
-// Author: Dennis Lang - 2024
-// https://landenlabs.com
-//
-// This file is part of lldupdir project.
-//
 // ----- License ----
 //
 // Copyright (c) 2024  Dennis Lang
@@ -39,57 +33,12 @@
 #include <fstream>
 #include <regex>
 
+
 #ifdef HAVE_WIN
     #define strncasecmp _strnicmp
-#else
-    #include <signal.h>
 #endif
 
 typedef unsigned int uint;
-
-volatile bool abortFlag = false;    // Set true by signal handler
-
-
-#ifdef HAVE_WIN
-//-------------------------------------------------------------------------------------------------
-BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType)  {
-    case CTRL_C_EVENT:  // Handle the CTRL-C signal.
-        abortFlag = true;
-        std::cerr << "\nCaught signal " << std::endl;
-        Beep(750, 300);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-#else
-//-------------------------------------------------------------------------------------------------
-void sigHandler(int /* sig_t */ s) {
-    abortFlag = true;
-    std::cerr << "\nCaught signal " << std::endl;
-}
-#endif
-
-// ---------------------------------------------------------------------------
-ParseUtil::ParseUtil() noexcept {
-#ifdef HAVE_WIN
-    if (! SetConsoleCtrlHandler(CtrlHandler, TRUE)) {
-        std::cerr << "Failed to install sig handler" << endl;
-    }
-#else
-    // signal(SIGINT, sigHandler);
-
-    struct sigaction sigIntHandler;
-    sigIntHandler.sa_handler = sigHandler;
-    sigemptyset(&sigIntHandler.sa_mask);
-    sigIntHandler.sa_flags = 0;
-    if (sigaction(SIGINT, &sigIntHandler, NULL) != 0) {
-        std::cerr << "Failed to install sig handler" << endl;
-    }
-#endif
-}
 
 // ---------------------------------------------------------------------------
 void ParseUtil::showUnknown(const char* argStr) {
@@ -101,11 +50,13 @@ void ParseUtil::showUnknown(const char* argStr) {
 // Return compiled regular expression from text.
 std::regex ParseUtil::getRegEx(const char* value) {
     try {
-        std::string valueStr(value);
-        return std::regex(valueStr);
-        // return std::regex(valueStr, regex_constants::icase);
-    }  catch (const std::regex_error& regEx)   {
-        std::cerr << Colors::colorize("_R") << regEx.what() << ", Pattern=" << value << Colors::colorize("_X_\n");
+        lstring valueStr(value);
+        convertSpecialChar(valueStr);
+        return ignoreCase ? std::regex(valueStr, regex_constants::icase) : std::regex(valueStr);
+    } catch (const std::regex_error& regEx) {
+        Colors::showError("Invalid regular expression ", regEx.what(), ", Pattern=", value);
+    } catch (...) {
+        Colors::showError("Invalid regular expression=", value);
     }
 
     patternErrCnt++;
@@ -119,11 +70,13 @@ bool ParseUtil::validOption(const char* validCmd, const char* possibleCmd, bool 
     size_t validLen = strlen(validCmd);
     size_t possibleLen = strlen(possibleCmd);
 
-    if ( strncasecmp(validCmd, possibleCmd, std::min(validLen, possibleLen)) == 0)
+    if (strncasecmp(validCmd, possibleCmd, std::min(validLen, possibleLen)) == 0) {
+        parseArgSet.insert(validCmd);
         return true;
+    }
 
     if (reportErr) {
-        std::cerr << Colors::colorize("_R_Unknown option:'")  << possibleCmd << "', expect:'" << validCmd << Colors::colorize("'_X_\n");
+        std::cerr << Colors::colorize("_R_Unknown option:'") << possibleCmd << "', expect:'" << validCmd << Colors::colorize("'_X_\n");
         optionErrCnt++;
     }
     return false;
@@ -132,11 +85,17 @@ bool ParseUtil::validOption(const char* validCmd, const char* possibleCmd, bool 
 //-------------------------------------------------------------------------------------------------
 bool ParseUtil::validPattern(PatternList& outList, lstring& value, const char* validCmd, const char* possibleCmd, bool reportErr) {
     bool isOk = validOption(validCmd, possibleCmd, reportErr);
-    if (isOk)  {
-        ReplaceAll(value, "*", ".*");
-        ReplaceAll(value, "?", ".");
+    if (isOk) {
+        if (!unixRegEx) {
+            // Convert simple DOS patterns to regular expression
+            //  .   -> [.]    // match on dot
+            //  *   ->  .*    // zero or more of anything
+            //  ?   ->  .     // single any character
+            ReplaceAll(value, std::regex("([^[])[.]"), "$1[.]");
+            ReplaceAll(value, "*", ".*");
+            ReplaceAll(value, "?", ".");
+        }
         outList.push_back(getRegEx(value));
-        return true;
     }
     return isOk;
 }
@@ -154,7 +113,7 @@ bool ParseUtil::validFile(
         stream.open(value, mode);
         int err = errno;
         if (stream.bad()) {
-            std::cerr << Colors::colorize("_R_Failed to open ") << validCmd << " "  << value << " " << strerror(err) <<  Colors::colorize("'_X_\n");
+            Colors::showError("Failed to open ", validCmd, " ", value, " ", strerror(err));
             optionErrCnt++;
         }
     }
@@ -218,8 +177,13 @@ const char* ParseUtil::convertSpecialChar(const char* inPtr) {
                 }
             // seep through
             default:
+                Colors::showError("Warning: unrecognized escape sequence:", inPtr);
                 throw( "Warning: unrecognized escape sequence" );
-            case '\\':
+            case '\0': // Trailing slash
+                inPtr--;
+                break;
+            case '\\':      // Double slash becomes single
+                *outPtr++ = *inPtr;
             case '\?':
             case '\'':
             case '\"':
@@ -295,4 +259,52 @@ lstring& ParseUtil::getParts(
     }
     
     return outPart;
+}
+
+//-------------------------------------------------------------------------------------------------
+#ifdef HAVE_WIN
+#define byte win_byte_override      // Fix for c++ v17+
+#include <Windows.h>
+#undef byte                         // Fix for c++ v17+
+#include <stdio.h>
+#endif
+
+#define RED    "\033[01;31m"
+#define GREEN  "\033[01;32m"
+#define YELLOW "\033[01;33m"
+#define BLUE   "\033[01;34m"
+#define PINK   "\033[01;35m"
+#define LBLUE  "\033[01;36m"
+#define WHITE  "\033[01;37m"
+#define OFF    "\033[00m"
+
+
+string Colors::colorize(const char* inStr) {
+#ifdef HAVE_WIN
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+#endif
+    string str(inStr);
+
+    // _x_  where x lowercase, colorize following word
+    replaceRE(str, "_y_(\\w+)", YELLOW "$1" OFF);
+    replaceRE(str, "_r_(\\w+)", RED "$1" OFF);
+    replaceRE(str, "_g_(\\w+)", GREEN "$1" OFF);
+    replaceRE(str, "_p_(\\w+)", PINK "$1" OFF);
+    replaceRE(str, "_lb_(\\w+)", LBLUE "$1" OFF);
+    replaceRE(str, "_w_(\\w+)", WHITE "$1" OFF);
+
+    // _X_  where X uppercase, colorize until _X_
+    replaceRE(str, "_Y_", YELLOW);
+    replaceRE(str, "_R_", RED);
+    replaceRE(str, "_G_", GREEN);
+    replaceRE(str, "_P_", PINK);
+    replaceRE(str, "_B_", BLUE);
+    replaceRE(str, "_LB_", LBLUE);
+    replaceRE(str, "_W_", WHITE);
+    replaceRE(str, "_X_", OFF);
+    return str;
 }
