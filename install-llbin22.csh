@@ -2,7 +2,7 @@
 
 set app=llbin22
 set dstdir=~/opt/bin
- 
+
 # xcodebuild -list -project $app.xcodeproj
 # rm -rf DerivedData/
 # xcodebuild -configuration Release -alltargets clean
