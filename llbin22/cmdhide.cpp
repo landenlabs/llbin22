@@ -202,6 +202,8 @@ bool CmdHide::makeHideName(const struct stat& info, const lstring& oldPath, lstr
 }
 
 //-------------------------------------------------------------------------------------------------
+// TODO - alternate approach is to use a validChars array which does not include all the
+// characters and xor the offset instead of offset.
 void CmdHide::encChar(const lstring& inStr, lstring& outStr) {
 
     size_t inLen = inStr.size();
