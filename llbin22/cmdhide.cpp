@@ -109,10 +109,10 @@ bool CmdHideBase::buildMap() {
         if (pos != NO_POS) {
             unsigned char d = (unsigned char)scrambled[pos];
             encMap[c] = d;
-            decMap[d] = c;
+            decMap[d] = (char)c;
         } else {
-            encMap[c] = c;
-            decMap[c] = c;
+            encMap[c] = (char)c;
+            decMap[c] = (char)c;
         }
     }
 

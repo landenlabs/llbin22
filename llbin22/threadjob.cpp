@@ -43,7 +43,7 @@ void ThreadJob::doJobThreadFnc() {
 
 //-------------------------------------------------------------------------------------------------
 bool ThreadJob::StartThread(Command& cmd, const lstring& name, bool allOfFile) {
-    ThreadJob* jobPtr;
+    ThreadJob* jobPtr = nullptr;
 
     // TODO -
     //      Rather then wait for next item sequencial to finish, find any jobs which are
@@ -67,7 +67,7 @@ bool ThreadJob::StartThread(Command& cmd, const lstring& name, bool allOfFile) {
 
 //-------------------------------------------------------------------------------------------------
 void ThreadJob::EndThreads() {
-    ThreadJob* jobPtr;
+    ThreadJob* jobPtr = nullptr;
     while (! jobQueue.Empty()) {
         jobQueue.Get(jobPtr);
         jobPtr->thread1.join();
