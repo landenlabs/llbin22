@@ -48,6 +48,7 @@
 // 4291 - No matching operator delete found
 #pragma warning( disable : 4291 )
 #define _CRT_SECURE_NO_WARNINGS
+#define VERSION "v6.05.01"
 
 // Project files
 #include "ll_stdhdr.hpp"
@@ -122,7 +123,7 @@ static size_t InspectFiles(Command& command,  lstring& dirname, unsigned depth) 
 
 //-------------------------------------------------------------------------------------------------
 void showHelp(char* name) {
-    const char* helpMsg =  "  Dennis Lang v2.4 (landenlabs.com) " __DATE__   "\n"
+    const char* helpMsg =  "  Dennis Lang " VERSION " (landenlabs.com) " __DATE__   "\n"
         "\nDes: 'Manipulate Binary Files\n"
         "Use: llbin22 [options] directories...   or  files\n"
         "\n"
