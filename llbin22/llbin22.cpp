@@ -26,7 +26,7 @@
 //
 // ----- License ----
 //
-// Copyright (c) 2021 Dennis Lang
+// Copyright (c) 2026 Dennis Lang
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@
 // 4291 - No matching operator delete found
 #pragma warning( disable : 4291 )
 #define _CRT_SECURE_NO_WARNINGS
-#define VERSION "v6.05.01"
+#define VERSION "v6.05.04"
 
 // Project files
 #include "ll_stdhdr.hpp"
