@@ -2,7 +2,8 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'
 
 jobs:
   build-macos:
@@ -69,9 +70,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: Latest Build
-          prerelease: true
+          name: ${{ github.ref_name }}
           files: |
             macos-binary/llbin22-macos.zip
             windows-binary/llbin22.exe
