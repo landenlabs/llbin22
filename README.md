@@ -1,4 +1,20 @@
-llbin22
+<table border="0">
+  <tr>
+    <td>
+      <!-- VERSION -->v6.05.11<br>
+      <!-- DATE -->11-May-2026<br>
+      macOS<br>
+      <a href="https://landenlabs.com">Home</a>
+    </td>
+    <td>
+      <a href="https://landenlabs.com">
+        <img src="screens/landen_labs_300.webp" width="300" alt="LanDen Labs">
+      </a>
+    </td>
+  </tr>
+</table>
+
+# llbin22
 ### Binary file encryption
 
 ### Description
@@ -6,7 +22,7 @@ llbin22
 C++ v17 code to build either a windows/dos or Mac/Linux command line tool
 that can scan directories and encrypt files.
 
-***NOTE*** This is an experiment. 
+***NOTE*** This is an experiment.
 
 ### Builds
 * OSX(M3)      | Provided Xcode project
@@ -19,7 +35,7 @@ that can scan directories and encrypt files.
 <pre>
 llbin22  Dennis Lang v2.4 (landenlabs.com) Dec 29 2024
 
-Des: 'Manipulate Binary Files
+Des: Manipulate Binary Files
 Use: llbin22 [options] directories...   or  files
 
  Options (only first unique characters required, options can be repeated):
