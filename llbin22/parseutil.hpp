@@ -6,7 +6,7 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2024
+// Author: Dennis Lang - 2026
 // https://landenlabs.com
 //
 // This file is part of lldupdir project.

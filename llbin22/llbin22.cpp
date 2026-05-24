@@ -11,7 +11,7 @@
 //      for zip do front and back.
 //-------------------------------------------------------------------------------------------------
 //
-// Author: Dennis Lang - 2021
+// Author: Dennis Lang - 2026
 // https://landenlabs.com/
 //
 // This file is part of llbin22 project.
