@@ -2,8 +2,8 @@ name: Build
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ main ]
+    tags: [ 'v*' ]
 
 jobs:
   build-macos:
@@ -67,10 +67,13 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
 
-      - name: Release
+      - name: Release (tagged)
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
+          prerelease: false
           files: |
             macos-binary/llbin22-macos.zip
             windows-binary/llbin22.exe
