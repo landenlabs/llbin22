@@ -1,7 +1,7 @@
 ﻿<table border="0">
   <tr>
     <td>
-      <!-- VERSION -->v6.05.20<br>
+      <!-- VERSION -->v6.05.25<br>
       24-May-2026<br>
       macOS<br>
       <a href="https://landenlabs.com">Home</a>
@@ -33,7 +33,7 @@ that can scan directories and encrypt files.
 
 ### Help Banner:
 <pre>
-llbin22  Dennis Lang  <!-- VERSION -->v6.05.20
+llbin22  Dennis Lang  <!-- VERSION -->v6.05.25
 
 Des: Manipulate Binary Files
 Use: llbin22 [options] directories...   or  files

@@ -48,7 +48,7 @@
 // 4291 - No matching operator delete found
 #pragma warning( disable : 4291 )
 #define _CRT_SECURE_NO_WARNINGS
-#define VERSION "v6.05.05"
+#define VERSION "v6.05.25"
 
 // Project files
 #include "ll_stdhdr.hpp"
