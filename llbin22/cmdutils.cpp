@@ -59,7 +59,7 @@ const string quote(const string& str) {
 #ifdef HAVE_WIN
 
 //-------------------------------------------------------------------------------------------------
-std::string GetErrorMsg(UInt error) {
+std::string GetErrorMsg(unsigned int error) {
     std::string errMsg;
     if (error != 0) {
         LPTSTR pszMessage;
@@ -114,7 +114,7 @@ const char* RunExtension(std::string& exeName) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool RunCommand(const char* command, UInt* pExitCode, int waitMsec) {
+bool RunCommand(const char* command, unsigned int* pExitCode, int waitMsec) {
     std::string tmpCommand(command);
     /*
     const char* pEndExe = strchr(command, ' ');
@@ -172,7 +172,7 @@ bool RunCommand(const char* command, UInt* pExitCode, int waitMsec) {
         *pExitCode = createStatus;
         DWORD exitCode = 0;
         if (createStatus == 0 && ! GetExitCodeProcess(pi.hProcess, &exitCode))
-            exitCode = (UInt) -1;
+            exitCode = (unsigned int) -1;
         *pExitCode = exitCode;
     }
 
@@ -216,7 +216,7 @@ const char EXTN_CHAR = '.';
 //-------------------------------------------------------------------------------------------------
 // Extract directory, name and extension parts from path
 void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(SLASH_CHAR) +1;
+    size_t nameStart = inPath.rfind(Directory_files::SLASH_CHAR) +1;
     if (nameStart == 0) {
         outDir = "";
         outName = inPath;

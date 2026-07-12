@@ -44,9 +44,9 @@ typedef std::vector<std::regex> PatternList;
 namespace CmdUtils {
 const std::string quote(const std::string& str);
 
-std::string GetErrorMsg(UInt error);
+std::string GetErrorMsg(unsigned int error);
 const char* RunExtension(std::string& exeName);
-bool RunCommand(const char* command, UInt* pExitCode, int waitMsec);
+bool RunCommand(const char* command, unsigned int* pExitCode, int waitMsec);
 
 bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult);
 void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath);

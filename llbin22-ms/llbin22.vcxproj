@@ -24,9 +24,9 @@
     <ClCompile Include="..\llbin22\cmdhide.cpp" />
     <ClCompile Include="..\llbin22\cmdutils.cpp" />
     <ClCompile Include="..\llbin22\commands.cpp" />
-    <ClCompile Include="..\llbin22\directory.cpp" />
+    <ClCompile Include="..\llcommon\directory.cpp" />
     <ClCompile Include="..\llbin22\llbin22.cpp" />
-    <ClCompile Include="..\llbin22\parseutil.cpp" />
+    <ClCompile Include="..\llcommon\parseutil.cpp" />
     <ClCompile Include="..\llbin22\ringbuffer.cpp" />
     <ClCompile Include="..\llbin22\threadjob.cpp" />
   </ItemGroup>
@@ -36,10 +36,10 @@
     <ClInclude Include="..\llbin22\cmdhide.hpp" />
     <ClInclude Include="..\llbin22\cmdutils.hpp" />
     <ClInclude Include="..\llbin22\commands.hpp" />
-    <ClInclude Include="..\llbin22\directory.hpp" />
-    <ClInclude Include="..\llbin22\ll_stdhdr.hpp" />
-    <ClInclude Include="..\llbin22\lstring.hpp" />
-    <ClInclude Include="..\llbin22\parseutil.hpp" />
+    <ClInclude Include="..\llcommon\directory.hpp" />
+    <ClInclude Include="..\llcommon\ll_stdhdr.hpp" />
+    <ClInclude Include="..\llcommon\lstring.hpp" />
+    <ClInclude Include="..\llcommon\parseutil.hpp" />
     <ClInclude Include="..\llbin22\ringbuffer.hpp" />
     <ClInclude Include="..\llbin22\threadjob.hpp" />
     <ClInclude Include="resource.h" />
@@ -119,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\llcommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +135,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\llcommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +152,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\llcommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,6 +172,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\llcommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

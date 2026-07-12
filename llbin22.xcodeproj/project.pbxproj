@@ -32,8 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9A1E516B2CFA04CD00689757 /* parseutil.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = parseutil.hpp; sourceTree = "<group>"; };
-		9A1E516C2CFA04CD00689757 /* parseutil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = parseutil.cpp; sourceTree = "<group>"; };
+		9A1E516B2CFA04CD00689757 /* parseutil.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ../llcommon/parseutil.hpp; sourceTree = "<group>"; };
+		9A1E516C2CFA04CD00689757 /* parseutil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ../llcommon/parseutil.cpp; sourceTree = "<group>"; };
 		9ABB64202CB229C40060FD55 /* cmdaxx.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cmdaxx.hpp; sourceTree = "<group>"; };
 		9ABB64212CB229C40060FD55 /* cmdaxx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cmdaxx.cpp; sourceTree = "<group>"; };
 		9ABB64222CB229C40060FD55 /* cmdcrypt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cmdcrypt.hpp; sourceTree = "<group>"; };
@@ -44,15 +44,15 @@
 		9ABB64272CB229C40060FD55 /* cmdutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cmdutils.cpp; sourceTree = "<group>"; };
 		9ABB642A2CB229C40060FD55 /* commands.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = commands.hpp; sourceTree = "<group>"; };
 		9ABB642B2CB229C40060FD55 /* commands.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = commands.cpp; sourceTree = "<group>"; };
-		9ABB642C2CB229C40060FD55 /* directory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = directory.hpp; sourceTree = "<group>"; };
-		9ABB642D2CB229C40060FD55 /* directory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = directory.cpp; sourceTree = "<group>"; };
-		9ABB642E2CB229C40060FD55 /* lstring.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lstring.hpp; sourceTree = "<group>"; };
+		9ABB642C2CB229C40060FD55 /* directory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ../llcommon/directory.hpp; sourceTree = "<group>"; };
+		9ABB642D2CB229C40060FD55 /* directory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ../llcommon/directory.cpp; sourceTree = "<group>"; };
+		9ABB642E2CB229C40060FD55 /* lstring.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ../llcommon/lstring.hpp; sourceTree = "<group>"; };
 		9ABB642F2CB229C40060FD55 /* ringbuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ringbuffer.hpp; sourceTree = "<group>"; };
 		9ABB64302CB229C40060FD55 /* ringbuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ringbuffer.cpp; sourceTree = "<group>"; };
 		9ABB64322CB229C40060FD55 /* threadjob.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = threadjob.hpp; sourceTree = "<group>"; };
 		9ABB64332CB229C40060FD55 /* threadjob.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = threadjob.cpp; sourceTree = "<group>"; };
 		9ABB643C2CB229DA0060FD55 /* llbin22.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = llbin22.cpp; sourceTree = "<group>"; };
-		9ABB643E2CB22A250060FD55 /* ll_stdhdr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ll_stdhdr.hpp; sourceTree = "<group>"; };
+		9ABB643E2CB22A250060FD55 /* ll_stdhdr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ../llcommon/ll_stdhdr.hpp; sourceTree = "<group>"; };
 		B9B44DBD1D8F65CD00782398 /* llbin22 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = llbin22; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -302,6 +302,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = X7Z43FGG83;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../llcommon";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.landenlabs.llbin22;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -317,6 +318,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = X7Z43FGG83;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../llcommon";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.landenlabs.llbin22;
 				PRODUCT_NAME = "$(TARGET_NAME)";
