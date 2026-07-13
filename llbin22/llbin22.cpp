@@ -190,8 +190,8 @@ int main(int argc, char* argv[]) {
                     lstring cmd = cmdValue[0];
                     lstring value = cmdValue[1];
                     
-                    if (cmd.length() > 1 && cmd[0] == '-')
-                        cmd.erase(0);   // allow -- prefix on commands
+                    if (cmd.length() > 2 && cmd[0] == '-' && cmd[1] == '-')
+                        cmd.erase(0, 1);   // allow -- prefix on commands
                     
                     const char* cmdName = cmd + 1;
                     switch (cmd[(unsigned)1]) {
