@@ -31,6 +31,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "cmdhide.hpp"
+#include "parseutil.hpp"
 
 #include <iostream>
 
@@ -155,10 +156,10 @@ size_t CmdHide::add( lstring& fullname, DIR_TYPES _dtype) {
 
     if (_dtype == dtype
             && ! name.empty()
-            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
-            && CmdUtils::FileMatches(fullname, includePathPatList, true)
-            && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
-            && CmdUtils::FileMatches(name, includeFilePatList, true)
+            && ! ParseUtil::FileMatches(fullname, excludePathPatList, false)
+            && ParseUtil::FileMatches(fullname, includePathPatList, true)
+            && ! ParseUtil::FileMatches(name, excludeFilePatList, false)
+            && ParseUtil::FileMatches(name, includeFilePatList, true)
             && name.find(HIDE_PREFIX) != 0
     && stat(fullname, &info) == 0
     ) {
@@ -186,9 +187,21 @@ size_t CmdHide::add( lstring& fullname, DIR_TYPES _dtype) {
 //-------------------------------------------------------------------------------------------------
 bool CmdHide::makeHideName(const struct stat& info, const lstring& oldPath, lstring& newPath) {
     lstring oldDir, oldName, oldExtn, newName;
-    CmdUtils::getPathParts(oldDir, oldName, oldExtn, oldPath);
+    DirUtil::getDir(oldDir, oldPath);
+    DirUtil::getName(oldName, oldPath);
+    DirUtil::getExt(oldExtn, oldName);
+    DirUtil::removeExtn(oldName, oldName);
     encChar(oldName, newName);
-    newPath = oldDir + HIDE_PREFIX + newName + oldExtn;
+
+    newPath = oldDir;
+    if (! newPath.empty())
+        newPath += Directory_files::SLASH;
+    newPath += HIDE_PREFIX;
+    newPath += newName;
+    if (! oldExtn.empty()) {
+        newPath += ".";
+        newPath += oldExtn;
+    }
 
     lstring tstName;
     decChar(newName, tstName);
@@ -237,10 +250,10 @@ size_t CmdUnhide::add(lstring& fullname, DIR_TYPES _dtype) {
 
     if (_dtype == dtype
             && ! name.empty()
-            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
-            && CmdUtils::FileMatches(fullname, includePathPatList, true)
-            && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
-            && CmdUtils::FileMatches(name, includeFilePatList, true)
+            && ! ParseUtil::FileMatches(fullname, excludePathPatList, false)
+            && ParseUtil::FileMatches(fullname, includePathPatList, true)
+            && ! ParseUtil::FileMatches(name, excludeFilePatList, false)
+            && ParseUtil::FileMatches(name, includeFilePatList, true)
     && name.find(HIDE_PREFIX) == 0
     && stat(fullname, &info) == 0
     ) {
@@ -266,10 +279,21 @@ size_t CmdUnhide::add(lstring& fullname, DIR_TYPES _dtype) {
 //-------------------------------------------------------------------------------------------------
 bool CmdUnhide::makeUnHideName(const struct stat& info, const lstring& oldPath, lstring& newPath) {
     lstring oldDir, oldName, oldExtn, newName;
-    CmdUtils::getPathParts(oldDir, oldName, oldExtn, oldPath);
+    DirUtil::getDir(oldDir, oldPath);
+    DirUtil::getName(oldName, oldPath);
+    DirUtil::getExt(oldExtn, oldName);
+    DirUtil::removeExtn(oldName, oldName);
     oldName.erase(0, sizeof(HIDE_PREFIX) -1);
     decChar(oldName, newName);
-    newPath = oldDir + newName + oldExtn;
+
+    newPath = oldDir;
+    if (! newPath.empty())
+        newPath += Directory_files::SLASH;
+    newPath += newName;
+    if (! oldExtn.empty()) {
+        newPath += ".";
+        newPath += oldExtn;
+    }
     return true;
 }
 

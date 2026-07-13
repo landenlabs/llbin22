@@ -212,41 +212,5 @@ bool RunCommand(const char* command, DWORD* pExitCode, int waitMsec) {
 #endif
 
 
-const char EXTN_CHAR = '.';
-//-------------------------------------------------------------------------------------------------
-// Extract directory, name and extension parts from path
-void getPathParts(lstring& outDir, lstring& outName,  lstring& outExt, const lstring& inPath) {
-    size_t nameStart = inPath.rfind(Directory_files::SLASH_CHAR) +1;
-    if (nameStart == 0) {
-        outDir = "";
-        outName = inPath;
-    } else {
-        outDir = inPath.substr(0, nameStart);
-        outName = inPath.substr(nameStart);
-    }
-
-    size_t extPos = outName.rfind(EXTN_CHAR) + 1;
-    if (extPos == 0)
-        outExt = "";
-    else {
-        extPos--;
-        outExt = outName.substr(extPos);
-        outName.resize(extPos);
-    }
-}
-
-//-------------------------------------------------------------------------------------------------
-// Return true if inName matches pattern in patternList
-bool FileMatches(const lstring& inName, const PatternList& patternList, bool emptyResult) {
-    if (patternList.empty() || inName.empty())
-        return emptyResult;
-
-    for (size_t idx = 0; idx != patternList.size(); idx++)
-        if (std::regex_match(inName.begin(), inName.end(), patternList[idx]))
-            return true;
-
-    return false;
-}
-
 // End namespace
 }

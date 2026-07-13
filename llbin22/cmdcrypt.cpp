@@ -33,6 +33,7 @@
 #include "ll_stdhdr.hpp"
 #include "cmdcrypt.hpp"
 #include "directory.hpp"
+#include "parseutil.hpp"
 
 #include <stdio.h>
 #include <iostream>
@@ -138,10 +139,10 @@ size_t CmdCryptBase::add(lstring& fullname, DIR_TYPES dtype) {
 
     if (dtype == IS_FILE
             && ! name.empty()
-            && ! CmdUtils::FileMatches(fullname, excludePathPatList, false)
-            && CmdUtils::FileMatches(fullname, includePathPatList, true)
-            && ! CmdUtils::FileMatches(name, excludeFilePatList, false)
-            && CmdUtils::FileMatches(name, includeFilePatList, true)) {
+            && ! ParseUtil::FileMatches(fullname, excludePathPatList, false)
+            && ParseUtil::FileMatches(fullname, includePathPatList, true)
+            && ! ParseUtil::FileMatches(name, excludeFilePatList, false)
+            && ParseUtil::FileMatches(name, includeFilePatList, true)) {
         fileCount++;
         if (showFile)
             std::cout << fullname.c_str() << std::endl;
