@@ -2,7 +2,7 @@
   <tr>
     <td>
       <!-- VERSION -->v6.05.25<br>
-      24-May-2026<br>
+      <!-- DATE -->13-Jul-2026<br>
       macOS<br>
       <a href="https://landenlabs.com">Home</a>
     </td>
@@ -17,7 +17,8 @@
 # llbin22
 ### Binary file encryption
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
+[![Build status](https://github.com/landenlabs/llbin22/actions/workflows/build.yml/badge.svg)](https://github.com/landenlabs/llbin22/actions/workflows/build.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](llcommon/LICENSE)
 ![Language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)
 
@@ -88,6 +89,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-See [LICENSE.txt](LICENSE.txt) for the full license text.
+See [llcommon/LICENSE](llcommon/LICENSE) for the full license text.
 
 [Top](#top)
